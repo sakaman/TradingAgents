@@ -80,7 +80,15 @@ def get_indicator(
         return f"No data found for symbol '{symbol}' to calculate {indicator}"
 
     stock = wrap(df)
-    stock_col = supported_indicators[indicator]
+
+    period_indicators = {"wr", "cci", "roc", "vr"}
+    if indicator in period_indicators:
+        if indicator == "roc":
+            stock_col = f"close_{time_period}_roc"
+        else:
+            stock_col = f"{indicator}_{time_period}"
+    else:
+        stock_col = supported_indicators[indicator]
     stock[stock_col]
 
     stock["Date"] = stock["Date"].dt.strftime("%Y-%m-%d")
